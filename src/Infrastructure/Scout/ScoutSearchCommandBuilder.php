@@ -67,10 +67,10 @@ class ScoutSearchCommandBuilder implements SearchCommandInterface
         $normalizedBuilder->setFields($builder->fields ?? []);
         $normalizedBuilder->setBoolQuery($builder->compound ?? new BoolQuery());
         $normalizedBuilder->setLimit($builder->limit);
-        $normalizedBuilder->setMinimumShouldMatch($builder->minimumShouldMatch ?? null);        
+        $normalizedBuilder->setMinimumShouldMatch($builder->minimumShouldMatch ?? null);
         $normalizedBuilder->setParams($builder->params ?? []);
 
-        $index = $builder->index ?: $builder->model->searchableAs();
+        $index = $builder->index ?: config('scout.prefix', '') . $builder->model->searchableAs();
 
         if ($builder->model instanceof SearchableFields) {
             $normalizedBuilder->setDefaultSearchFields($builder->model->getSearchableFields());
