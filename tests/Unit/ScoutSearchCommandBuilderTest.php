@@ -400,4 +400,5 @@ class ScoutSearchCommandBuilderTest extends TestCase
 
         self::assertsame($minimumShouldMatch, $subject->getMinimumShouldMatch());
     }
+    
 }
