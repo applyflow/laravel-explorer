@@ -42,6 +42,17 @@ class ExplorerServiceProvider extends ServiceProvider
                 );
             }
 
+            if(config()->has('explorer.connection.auth')) {
+                $client->setBasicAuthentication(
+                    config('explorer.connection.auth.username'),
+                    config('explorer.connection.auth.password')
+                );
+            }
+
+            if(config()->has('explorer.connection.ssl.verify')) {
+                $client->setSSLVerification(config('explorer.connection.ssl.verify'));
+            }
+
             return new ElasticClientFactory($client->build());
         });
 
@@ -60,7 +71,6 @@ class ExplorerServiceProvider extends ServiceProvider
             return new ElasticIndexConfigurationRepository(
                 config('explorer.indexes') ?? [],
                 config('explorer.prune_old_aliases'),
-                config('scout.prefix', '')
             );
         });
 
