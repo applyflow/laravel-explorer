@@ -17,6 +17,8 @@ class BoolQuery implements SyntaxInterface
 
     private Collection $filter;
 
+    private Collection $mustNot;
+
     private ?string $minimumShouldMatch = null;
 
     public function __construct()
@@ -24,6 +26,7 @@ class BoolQuery implements SyntaxInterface
         $this->must = new Collection();
         $this->should = new Collection();
         $this->filter = new Collection();
+        $this->mustNot = new Collection();
     }
 
     public function add(string $type, SyntaxInterface $syntax): void
@@ -32,6 +35,7 @@ class BoolQuery implements SyntaxInterface
            QueryType::MUST => $this->must->add($syntax),
            QueryType::SHOULD => $this->should->add($syntax),
            QueryType::FILTER => $this->filter->add($syntax),
+           QueryType::MUSTNOT => $this->mustNot->add($syntax),
            default => throw new InvalidArgumentException($type . ' is not a valid type.'),
         };
     }
@@ -49,6 +53,11 @@ class BoolQuery implements SyntaxInterface
     public function filter(SyntaxInterface $syntax): void
     {
         $this->filter->add($syntax);
+    }
+
+    public function mustNot(SyntaxInterface $syntax): void
+    {
+        $this->mustNot->add($syntax);
     }
 
     public function minimumShouldMatch(?string $value): void
@@ -71,6 +80,7 @@ class BoolQuery implements SyntaxInterface
             'must' => $this->must->map(fn ($must) => $must->build())->toArray(),
             'should' => $this->should->map(fn ($should) => $should->build())->toArray(),
             'filter' => $this->filter->map(fn ($filter) => $filter->build())->toArray(),
+            'must_not' => $this->mustNot->map(fn ($mustNot) => $mustNot->build())->toArray(),
         ];
 
         if (!is_null($this->minimumShouldMatch)) {
@@ -89,6 +99,7 @@ class BoolQuery implements SyntaxInterface
         $query->must = clone $this->must;
         $query->should = clone $this->should;
         $query->filter = clone $this->filter;
+        $query->mustNot = clone $this->mustNot;
         $query->minimumShouldMatch = $this->minimumShouldMatch;
 
         return $query;

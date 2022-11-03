@@ -12,5 +12,7 @@ interface QueryType
 
     public const FILTER = 'filter';
 
-    public const ALL = [self::MUST, self::SHOULD, self::FILTER];
+    public const MUSTNOT = 'must_not';
+
+    public const ALL = [self::MUST, self::SHOULD, self::FILTER, self::MUSTNOT];
 }
