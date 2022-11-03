@@ -23,6 +23,8 @@ class ScoutSearchCommandBuilder implements SearchCommandInterface
 
     private array $filter = [];
 
+    private array $mustNot = [];
+
     private array $where = [];
 
     private array $fields = [];
@@ -60,6 +62,7 @@ class ScoutSearchCommandBuilder implements SearchCommandInterface
         $normalizedBuilder->setMust($builder->must ?? []);
         $normalizedBuilder->setShould($builder->should ?? []);
         $normalizedBuilder->setFilter($builder->filter ?? []);
+        $normalizedBuilder->setMustNot($builder->mustNot ?? []);
         $normalizedBuilder->setWhere($builder->where ?? []);
         $normalizedBuilder->setQuery($builder->query ?? '');
         $normalizedBuilder->setAggregations($builder->aggregations ?? []);
@@ -94,6 +97,11 @@ class ScoutSearchCommandBuilder implements SearchCommandInterface
     public function getFilter(): array
     {
         return $this->filter;
+    }
+
+    public function getMustNot(): array
+    {
+        return $this->mustNot;
     }
 
     public function getWhere(): array
@@ -159,6 +167,11 @@ class ScoutSearchCommandBuilder implements SearchCommandInterface
     public function setFilter(array $filter): void
     {
         $this->filter = $filter;
+    }
+
+    public function setMustNot(array $mustNot): void
+    {
+        $this->mustNot = $mustNot;
     }
 
     public function setWhere(array $where): void
@@ -255,6 +268,8 @@ class ScoutSearchCommandBuilder implements SearchCommandInterface
         $compound->addMany(QueryType::MUST, $this->getMust());
         $compound->addMany(QueryType::SHOULD, $this->getShould());
         $compound->addMany(QueryType::FILTER, $this->getFilter());
+        $compound->addMany(QueryType::MUSTNOT, $this->getMustNot());
+
 
         if (!empty($this->query)) {
             $compound->add('must', new MultiMatch($this->query, $this->getDefaultSearchFields()));

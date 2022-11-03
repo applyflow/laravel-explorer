@@ -97,6 +97,11 @@ class ExplorerServiceProvider extends ServiceProvider
             return $this;
         });
 
+        Builder::macro('mustNot', function ($mustNot) {
+            $this->mustNot[] = $mustNot;
+            return $this;
+        });
+
         Builder::macro('field', function (string $field) {
             $this->fields[] = $field;
             return $this;
